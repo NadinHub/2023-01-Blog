@@ -15,8 +15,8 @@ const app = express()
 // }
 
 app.use(cors());
-app.use(express.json())
-app.use(cookieParser())
+app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes) //if I got to localhost:8801/api/posts and endopint in postRoutes ("/").
 app.use("/api/users", userRoutes)

@@ -1,30 +1,64 @@
-import React from 'react'
-import { Link } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import ava from "../img/ava1.jpeg"
 import Edit from "../img/edit.svg"
 import Delete from "../img/delete.svg"
 import Menu from '../components/Menu';
+import { useState, useContext } from 'react';
+import { useEffect } from 'react';
+import axios from 'axios';
+import moment from 'moment';
+import { AuthContext } from '../context/authContext.js';
 
 const Single = () => {
+
+  const [post, setPosts] = useState([]);
+
+  const location = useLocation()
+
+  // console.log(location) //{... pathname: "/", search: "?cat=science"...}
+  const postId = location.pathname.split("/")[2] //http://localhost:3001/post/1 - we take post number from URL address in browser
+
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8801/api/posts/${postId}`);
+        setPosts(res.data)
+      }
+      catch (err) { console.log(err) }
+    }
+    fetchData();
+  }, [postId])
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/posts/${postId}`);
+      navigate("/")
+    } catch (err) { console.log(err) }
+  }
   return (
     <div className="single">
       <div className="content">
-        <img src="https://images.pexels.com/photos/13855925/pexels-photo-13855925.jpeg" alt="" />
+        <img src={post?.img} alt="" />
         <div className="user">
-          <img src={ava} alt="ava1" />
+          {post.userImg && <img src={post.userImg} alt="avatar" />}
           <div className="info">
-            <span>John</span>
-            <p>Posted 2 days ago</p>
+            <span>{post.username}</span>
+            <p>Posted {moment(post.date).fromNow()}</p>
           </div>
-          <div className="edit">
-            <Link to={`/write?edit=2`}>
-              <img src={Edit} alt="editicon" />
-            </Link>
-            <img src={Delete} alt="delete" />
-          </div>
+          {(currentUser.username === post.username) && (
+            <div className="edit">
+              <Link to={`/write?edit=2`}>
+                <img src={Edit} alt="editicon" />
+              </Link>
+              <img onClick={handleDelete} src={Delete} alt="delete" />
+            </div>
+          )}
         </div>
-        <h1>Lorem ipsum dolor sit amet consectetur </h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.Culpa explicabo quasi voluptates a exercitationem eaque unde ad doloremque tempora aut provident amet, sed facere distinctio eveniet dolorem. Ab, animi molestias!</p>
+        <h1>{post.title}</h1>
+        {post.desc}
       </div>
       <Menu />
     </div>
