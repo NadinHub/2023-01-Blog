@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom"
-import ava from "../img/ava1.jpeg"
+// import ava from "../img/ava1.jpeg"
 import Edit from "../img/edit.svg"
 import Delete from "../img/delete.svg"
 import Menu from '../components/Menu';
@@ -20,7 +20,8 @@ const Single = () => {
 
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  axios.defaults.withCredentials = true;
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,10 +35,11 @@ const Single = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/posts/${postId}`);
+      await axios.delete(`http://localhost:8801/api/posts/${postId}`);
       navigate("/")
     } catch (err) { console.log(err) }
   }
+  console.log(post);
   return (
     <div className="single">
       <div className="content">
@@ -45,7 +47,7 @@ const Single = () => {
         <div className="user">
           {post.userImg && <img src={post.userImg} alt="avatar" />}
           <div className="info">
-            <span>{post.username}</span>
+            <span>{post?.username}</span>
             <p>Posted {moment(post.date).fromNow()}</p>
           </div>
           {(currentUser.username === post.username) && (
