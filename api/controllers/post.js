@@ -11,7 +11,6 @@ export const getPosts = (req, res) => {
 }
 
 export const getPost = (req, res) => {
-    // console.log(req.params.id)
     const q = "SELECT `username`, `title`, `desc`, p.img, u.img AS userImg, `cat`, `date` FROM users u JOIN posts p ON u.id=p.uid WHERE p.id= ? "
     db.query(q, [req.params.id], (err, data) => {
         if (err) return res.status(500).json(err);
@@ -24,12 +23,10 @@ export const addPost = (req, res) => {
 }
 
 export const deletePost = (req, res) => {
-    console.log(req.cookies.access_token)
     const token = req.cookies.access_token
     if (!token) return res.status(401).json('Not authenticated!')
 
     jwt.verify(token, "jwtkey", (err, userInfo) => {
-        // console.log(userInfo);
         if (err) return res.status(403).json("Token is not valid!")
 
         const postId = req.params.id;

@@ -20,8 +20,8 @@ const Single = () => {
 
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  axios.defaults.withCredentials = true;
-  
+  axios.defaults.withCredentials = true;// !!!!!
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -39,7 +39,7 @@ const Single = () => {
       navigate("/")
     } catch (err) { console.log(err) }
   }
-  console.log(post);
+
   return (
     <div className="single">
       <div className="content">
@@ -62,7 +62,7 @@ const Single = () => {
         <h1>{post.title}</h1>
         {post.desc}
       </div>
-      <Menu />
+      <Menu cat={post.cat} />
     </div>
   )
 }

@@ -50,7 +50,7 @@ export const login = (req, res) => {
         const { password, ...other } = data[0];
         console.log("other", other) 
         //Let's return our user information and send this token as a cookie. To use cookie we need library npm add cookie-parser.
-        res.cookie("access_token", token, { httpOnly: false }).status(200).json(other); //we send OTHER (not password)
+        res.cookie("access_token", token, { httpOnly: true }).status(200).json(other); //we send OTHER (not password)
         //"httpOnly:true" - can allowed to send ONLY when we make an HTTP request.
     });
 }; 
