@@ -13,7 +13,7 @@ const Write = () => {
     e.preventDefault()
   }
 
-  
+  //upload file inside a server
   return (
     <div className='add'>
       <div className="content">
