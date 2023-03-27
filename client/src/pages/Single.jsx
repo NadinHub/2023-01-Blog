@@ -40,10 +40,15 @@ const Single = () => {
     } catch (err) { console.log(err) }
   }
 
+  const getText = (html) =>{
+    const doc = new DOMParser().parseFromString(html, "text/html")
+    return doc.body.textContent
+  }
+
   return (
     <div className="single">
       <div className="content">
-        <img src={post?.img} alt="" />
+        <img src={`../upload/${post?.img}`} alt="" />
         <div className="user">
           {post.userImg && <img src={post.userImg} alt="avatar" />}
           <div className="info">
@@ -52,7 +57,7 @@ const Single = () => {
           </div>
           {(currentUser.username === post.username) && (
             <div className="edit">
-              <Link to={`/write?edit=2`}>
+              <Link to={`/write?edit=2`} state={post}>
                 <img src={Edit} alt="editicon" />
               </Link>
               <img onClick={handleDelete} src={Delete} alt="delete" />
@@ -60,7 +65,7 @@ const Single = () => {
           )}
         </div>
         <h1>{post.title}</h1>
-        {post.desc}
+        {getText(post.desc)}
       </div>
       <Menu cat={post.cat} />
     </div>
