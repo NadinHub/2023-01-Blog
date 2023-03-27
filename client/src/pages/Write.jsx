@@ -4,6 +4,9 @@ import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
+
+import Upload from '../components/Uploader.jsx';
 
 const Write = () => {
 
@@ -13,21 +16,11 @@ const Write = () => {
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.cat || ""); //can make a one input here and set them in one function
 
-  //upload file inside a server
-  const upload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file)
-      const res = await axios.post(`http://localhost:8801/api/upload`, formData)
-      return res.data //res.data - contains file name
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  const navigate = useNavigate();
 
   const handleClick = async e => {
     e.preventDefault();
-    const imgURL = await upload();
+    const imgURL = await Upload(file);
 
     try {
       state ? await axios.put(`http://localhost:8801/api/posts/${state.id}`, {
@@ -42,7 +35,8 @@ const Write = () => {
         cat, 
         img: file ? imgURL : "",
         date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-      })
+      });
+      navigate('/')
 
     } catch (err) {
       console.log(err)
